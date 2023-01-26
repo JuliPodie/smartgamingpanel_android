@@ -4,13 +4,9 @@ import android.Manifest;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.AdvertiseCallback;
-import android.bluetooth.le.AdvertiseSettings;
-import android.bluetooth.le.BluetoothLeAdvertiser;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import lombok.experimental.UtilityClass;
 
@@ -18,36 +14,19 @@ import lombok.experimental.UtilityClass;
 public class BluetoothHelper {
 
 	private static BluetoothAdapter bluetoothAdapter;
-	private static BluetoothLeAdvertiser bluetoothLeAdvertiser;
 
-	public static final AdvertiseCallback LOG_CALLBACK = new AdvertiseCallback() {
-		@Override
-		public void onStartSuccess(AdvertiseSettings settingsInEffect) {
-			Log.d("DEBUG", "SUCCESS: " + settingsInEffect.toString());
-		}
-
-		@Override
-		public void onStartFailure(int errorCode) {
-			Log.d("DEBUG", "FAILURE: " + errorCode);
-		}
-	};
-
-	private static final AdvertiseSettings settings =
-			new AdvertiseSettings.Builder().setAdvertiseMode(AdvertiseSettings.ADVERTISE_MODE_LOW_LATENCY)
-					.setTxPowerLevel(AdvertiseSettings.ADVERTISE_TX_POWER_HIGH)
-					.setConnectable(false)
-					.setTimeout(2500)
-					.build();
+	private static CharacteristicsEmitter characteristicsEmitter;
 
 
 	public static BluetoothAdapter getBluetoothAdapter() {
 		return bluetoothAdapter;
 	}
 
-	public static BluetoothLeAdvertiser getBluetoothLEAdvertiser() {
-		if (bluetoothLeAdvertiser == null)
-			bluetoothLeAdvertiser = bluetoothAdapter.getBluetoothLeAdvertiser();
-		return bluetoothLeAdvertiser;
+	public static CharacteristicsEmitter getCharacteristicsEmitter(Context context) {
+		if (characteristicsEmitter == null) {
+			characteristicsEmitter = new CharacteristicsEmitter(context);
+		}
+		return characteristicsEmitter;
 	}
 
 	public static void initialize(Activity activity) {
@@ -79,7 +58,4 @@ public class BluetoothHelper {
 		}
 	}
 
-	public static AdvertiseSettings getDefaultAdvertisementSettings() {
-		return settings;
-	}
 }

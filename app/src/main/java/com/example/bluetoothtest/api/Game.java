@@ -11,7 +11,7 @@ public enum Game implements Command {
 	}
 
 	@Override
-	public byte getCommand() {
-		return code;
+	public byte[] getCommand() {
+		return new byte[]{code};
 	}
 }
