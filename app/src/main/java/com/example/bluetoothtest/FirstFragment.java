@@ -5,9 +5,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.bluetoothtest.api.BluetoothHelper;
 import com.example.bluetoothtest.api.Emitter;
 import com.example.bluetoothtest.api.Input;
@@ -16,52 +18,65 @@ import com.example.bluetoothtest.databinding.FragmentFirstBinding;
 public class FirstFragment extends Fragment {
 
 
-	private FragmentFirstBinding binding;
+    private FragmentFirstBinding binding;
 
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		binding = FragmentFirstBinding.inflate(inflater, container, false);
-		return binding.getRoot();
-	}
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        binding = FragmentFirstBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-	@SuppressLint("MissingPermission")
-	public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-		super.onViewCreated(view, savedInstanceState);
+    @SuppressLint("MissingPermission")
+    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        binding.settings.setOnClickListener(view1 -> {
+            NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_Settings);
+        });
+        binding.snake.setOnClickListener(view1 -> {
 
-		binding.snake.setOnClickListener(view1 -> {
+            if (connectGame(0) >= 0) NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_ThirdFragment);
+        });
 
-			if (connectGame(0) >= 0) NavHostFragment.findNavController(FirstFragment.this)
-					.navigate(R.id.action_FirstFragment_to_ThirdFragment);
-		});
+        binding.pong.setOnClickListener(view1 -> {
+            if (connectGame(1) >= 0) NavHostFragment.findNavController(FirstFragment.this)
+                    .navigate(R.id.action_FirstFragment_to_SecondFragment);
+        });
 
-		binding.pong.setOnClickListener(view1 -> {
-			if (connectGame(1) >= 0) NavHostFragment.findNavController(FirstFragment.this)
-					.navigate(R.id.action_FirstFragment_to_SecondFragment);
-		});
-		binding.snake.setVisibility(View.VISIBLE);
-		binding.pong.setVisibility(View.VISIBLE);
-	}
+        binding.connect.setOnClickListener(view1 -> {
+            //TODO
+
+            binding.connect.setVisibility(View.INVISIBLE);
+            binding.snake.setVisibility(View.VISIBLE);
+            binding.pong.setVisibility(View.VISIBLE);
+            binding.settings.setVisibility(View.VISIBLE);
+        });
+
+        binding.connect.setVisibility(View.VISIBLE);
+
+    }
 
 
-	public int connectGame(int game) {
-		try {
-			Emitter emitter = BluetoothHelper.getCharacteristicsEmitter(this.getContext());
+    public int connectGame(int game) {
+        try {
+            Emitter emitter = BluetoothHelper.getCharacteristicsEmitter(this.getContext());
 
-			if (game == 0) emitter.enterCommand(Input.SNAKE);
-			if (game == 1) emitter.enterCommand(Input.PONG);
+            if (game == 0) emitter.enterCommand(Input.SNAKE);
+            if (game == 1) emitter.enterCommand(Input.PONG);
 
-			return 0;
-		} catch (Exception e) {
-			return -1;
-		}
+            return 0;
+        } catch (Exception e) {
+            return -1;
+        }
 
-	}
+    }
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		binding = null;
-	}
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
 
 }

@@ -14,6 +14,9 @@
             android:id="@+id/action_FirstFragment_to_SecondFragment"
             app:destination="@id/SecondFragment" />
         <action
+            android:id="@+id/action_FirstFragment_to_Settings"
+            app:destination="@id/Settings" />
+        <action
             android:id="@+id/action_FirstFragment_to_ThirdFragment"
             app:destination="@id/ThirdFragment" />
     </fragment>
@@ -25,4 +28,8 @@
         android:id="@+id/ThirdFragment"
         android:name="com.example.bluetoothtest.ThirdFragment"
         tools:layout="@layout/fragment3" />
+    <fragment
+        android:id="@+id/Settings"
+        android:name="com.example.bluetoothtest.SettingsFragment"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
